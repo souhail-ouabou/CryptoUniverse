@@ -8,20 +8,16 @@
  
 
  //add the url ans the headers to our call
- const creatRequest = (url) => ({url, headers: cryptoApiHeaders})
+ const createRequest = (url) => ({url, headers: cryptoApiHeaders})
  
  export const cryptoApi = createApi({
     reducerPath: 'cryptoApi',
     baseQuery: fetchBaseQuery({ baseUrl}),
     endpoints: (builder) => ({
       getCryptos: builder.query({
-        query: (count) => creatRequest(`/coins?limit=${count}`)
+        query: (count) => createRequest(`/coins?limit=${count}`)
       }),
     }),
   });
-
-  export const {
-      //create hook (use***Query) to get all data for ypur query
-      
-      useGetCryptosQuery,
-  } = cryptoApi; 
+//create hook (use***Query) to get all data for ypur query
+  export const { useGetCryptosQuery } = cryptoApi; 
