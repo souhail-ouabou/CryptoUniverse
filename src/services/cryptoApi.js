@@ -18,9 +18,12 @@
         query: (count) => createRequest(`/coins?limit=${count}`)
       }),
       getCryptoDetails: builder.query({
-        query: (id) => createRequest(`/coin/${id}`)
+        query: (coinId) => createRequest(`/coin/${coinId}`)
+      }),
+      getCryptoHistory: builder.query({
+        query: ({coinId, timeperiod}) => createRequest(`coin/${coinId}/history?timeperiod=${timeperiod}`),
       })
     }),
   });
 //create hook (use***Query) to get all data for ypur query
-  export const { useGetCryptosQuery,useGetCryptoDetailsQuery } = cryptoApi; 
+  export const { useGetCryptosQuery,useGetCryptoDetailsQuery,useGetCryptoHistoryQuery } = cryptoApi; 
