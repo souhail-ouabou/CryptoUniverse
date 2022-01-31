@@ -1,25 +1,25 @@
-import { CheckOutlined, DollarCircleOutlined, ExclamationCircleOutlined, FundOutlined, MoneyCollectOutlined, NumberOutlined, StopOutlined, ThunderboltOutlined, TrophyOutlined } from '@ant-design/icons/lib/icons';
+import React, {  useState } from 'react';
+import { CheckOutlined, DollarCircleOutlined, ExclamationCircleOutlined, FundOutlined, MoneyCollectOutlined, NumberOutlined, StopOutlined, ThunderboltOutlined, TrophyOutlined } from '@ant-design/icons';
 import { Col,Row,Select,Typography } from 'antd';
-import Text from 'antd/lib/typography/Text';
+
 import HTMLReactParser from 'html-react-parser';
 import millify from 'millify';
-import React, { useEffect, useState } from 'react';
 import {useParams} from 'react-router-dom';
 import { useGetCryptoDetailsQuery, useGetCryptoHistoryQuery } from '../services/cryptoApi';
 import LineChart from './LineChart';
-
-const {Title} = Typography;
-const{Option} = Select;
+import Loader from './Loader';
+const { Title, Text } = Typography;
+const { Option } = Select;
 const CryptoDetails = () => {
   const time = ['3h', '24h', '7d', '30d', '1y', '3m', '3y', '5y'];
   const {coinId} = useParams();
   const [timePeriod,setTimePeriod] = useState();
   const {data,isFetching} = useGetCryptoDetailsQuery(coinId);
-  const {data : coinHistory} = useGetCryptoHistoryQuery({coinId,timePeriod});
+  const {data : coinHistory,isFetching : isLoading} = useGetCryptoHistoryQuery({coinId,timePeriod});
   console.log("coinHistory : ",coinHistory);
     const cryptoDetails = data?.data?.coin;
     console.log("Detalis coin",cryptoDetails);
-    if (isFetching) return 'Loading..';
+    if (isFetching || isLoading) return <Loader/>;
 
     const stats = [
       { title: 'Price to USD', value: `$ ${cryptoDetails?.price && millify(cryptoDetails?.price)}`, icon: <DollarCircleOutlined/> },
@@ -54,7 +54,7 @@ const CryptoDetails = () => {
           onChange={(value)=>setTimePeriod(value)}>
             {time.map((date)=> <Option key={date}>{date}</Option>)}
           </Select>
-          <LineChart coinHistory={coinHistory} currentPrice={millify(cryptoDetails.price)} coinName={cryptoDetails.name}/>
+          <LineChart coinHistory={coinHistory} currentPrice={millify(cryptoDetails?.price)} coinName={cryptoDetails.name}/>
             <Col className="stats-container">
               <Col className="coin-value-statistics">
                 <Col className="coin-value-statistics-heading">
